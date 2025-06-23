@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Deepin Desktop Environment first run script
+
+This script is designed to automate the initial setup of the Deepin Desktop Environment (DDE).
+1. Create a symbolic link for the introduction video.
+2. Deploy system desktop icons.
+3. Configure Chrome browser.
+4. Configure Fcitx5 theme to Deepin style.
+5. Clean up auto-start items.
+"""
+
+import locale
+import os
+import re
+import shutil
+import getpass
+import tarfile
+import subprocess
+from pathlib import Path
+from gi.repository import GLib
+
+
+def get_system_type() -> str:
+    with open("/etc/deepin-version", "r") as f:
+        return re.search(r"^Type=(.*)$", f.read(), re.M).group(1)
+
+
+def create_video_symlink() -> None:
+    src = Path("/usr/share/dde-introduction/demo.mp4")
+    dest = Path.home()/"Videos/dde-introduction.mp4"
+
+    if src.exists():
+        dest.unlink(missing_ok=True)
+        dest.symlink_to(src.resolve())
+
+
+def deploy_desktop_icons(desktop_path: Path) -> None:
+    system_icons = [
+        'dde-computer.desktop',
+        'dde-trash.desktop',
+        'dde-home.desktop'
+    ]
+
+    if not desktop_path.exists():
+        desktop_path.mkdir(parents=True)
+
+    for icon in system_icons:
+        src = Path("/usr/share/applications")/icon
+        dest = desktop_path/icon
+        if src.exists() and not dest.resolve().samefile(src):
+            shutil.copy(src, dest)
+
+
+def configure_chrome() -> None:
+    """configure chrome browser
+    1. unpack preset config file
+    2. update flash component path
+    """
+    config_dir = Path.home()/".config/google-chrome"
+    if config_dir.exists():
+        return
+
+    base_path = "/usr/share/deepin-default-settings/google-chrome"
+    config_files = [
+        f"{base_path}/override-chrome-config.tar",
+        f"{base_path}/chrome-config-{locale.getdefaultlocale()[0]}.tar",
+        f"{base_path}/chrome-config.tar"
+    ]
+
+    config_file = next((f for f in config_files if Path(f).exists()), None)
+    if not config_file:
+        return
+
+    # unpack config file
+    with tarfile.open(config_file) as tar:
+        tar.extractall(config_dir.parent)
+
+    # refresh flash component path
+    flash_config = config_dir/"PepperFlash/latest-component-updated-flash"
+    if flash_config.exists():
+        username = getpass.getuser()
+        flash_config.write_text(
+            flash_config.read_text().replace("deepin", username)
+        )
+
+def modify_fcitx5_theme_config_file() -> None:
+    # Check if Deepin theme exists
+    theme_path = "/usr/share/fcitx5/themes/deepin-light"
+    if not os.path.exists(theme_path):
+        print(f"Warning: Fcitx5 Deepin theme not found: {theme_path}")
+        return
+    
+    file_path = "~/.config/fcitx5/conf/classicui.conf"
+    expanded_path = os.path.expanduser(file_path)
+    
+    # If config file doesn't exist, create it with default content
+    if not os.path.exists(expanded_path):
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(expanded_path), exist_ok=True)
+        
+        # Default content for classicui.conf
+        default_content = """
+Theme=deepin-light
+DarkTheme=deepin-dark
+UseDarkTheme=True
+"""
+        
+        with open(expanded_path, 'w') as f:
+            f.write(default_content)
+        print(f"file path: {expanded_path}")
+        print(f"Created new config file: {expanded_path}")
+        return
+    
+    # If file exists, read its content
+    with open(expanded_path, 'r') as f:
+        lines = f.readlines()
+
+    # modify file content
+    modified = False
+    for i in range(len(lines)):
+        line = lines[i].strip()
+        # modify light theme (skip comment line)
+        if line.startswith("Theme=") and not lines[i].startswith("#"):
+            lines[i] = 'Theme=deepin-light\n'
+            modified = True
+        # modify dark theme (skip comment line)
+        elif line.startswith("DarkTheme=") and not lines[i].startswith("#"):
+            lines[i] = 'DarkTheme=deepin-dark\n'
+            modified = True
+
+    # write file content
+    if modified:
+        with open(expanded_path, 'w') as f:
+            f.writelines(lines)
+        print("Config file modified successfully")
+    else:
+        print("No modification needed")
+
+def cleanup_autostart() -> None:
+    """cleanup_autostart"""
+    autostart_file = Path.home()/".config/autostart/dde-first-run.desktop"
+    autostart_file.unlink(missing_ok=True)
+
+
+def main():
+    # first run dde-introduction and dde-am
+    if Path("/usr/bin/dde-am").exists():
+        subprocess.Popen(["/usr/bin/dde-am", "dde-introduction"])
+
+
+    create_video_symlink() # create video symlink
+
+    if get_system_type() != "Desktop":
+        desktop_dir = Path(GLib.get_user_special_dir(
+            GLib.UserDirectory.DIRECTORY_DESKTOP
+        ))
+        deploy_desktop_icons(desktop_dir)
+
+    configure_chrome()  # configure chrome browser
+    modify_fcitx5_theme_config_file()  # modify fcitx5 theme config file
+    cleanup_autostart() # cleanup autostart
+
+
+if __name__ == "__main__":
+    main()
