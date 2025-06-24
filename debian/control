@@ -1,0 +1,53 @@
+Source: deepin-settings-default
+Section: admin
+Priority: optional
+Maintainer: sysdev <sysdev@deepin.com>
+Standards-Version: 4.5.1
+Build-Depends:
+ debhelper-compat (= 12),
+
+Package: deepin-settings-default
+Architecture: all
+Depends:
+ deepin-settings-default-tuning,
+ deepin-wallpapers,
+ iw,
+ python3,
+ python3-gi,
+ ${misc:Depends},
+ deepin-keyring,
+ distro-info-data,
+ eject,
+ fonts-noto, 
+ fonts-symbola
+Pre-Depends: 
+ deepin-home (>= 1.6.0),
+Suggests:
+ binfmt-support,
+Conflicts:
+ chrome-default-settings,
+ deepin-default-settings,
+ deepin-desktop-base,
+ deepin-desktop-server,
+Replaces:
+ deepin-default-settings,
+ deepin-desktop-base,
+ deepin-default-settings-network,
+ deepinop,
+Description: default settings for deepin desktop environment
+ This package does tweaking and to provide better experience of deepin desktop
+ environment.
+
+Package: deepin-settings-default-tuning
+Architecture: all
+Depends:
+ ${misc:Depends},
+Conflicts:
+ deepin-default-settings-tuning,
+Replaces:
+ deepin-default-settings-tuning,
+Description: default settings for deepin desktop environment - misc overrides
+ This package does tweaking and to provide better experience of deepin desktop
+ environment.
+ .
+ This package includes files to override cups default page and fcitx icon.
