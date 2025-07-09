@@ -1,6 +1,8 @@
 # deepin-settings-default
 
-该仓库旨在替换旧有的 [deepin-default-settings](https://github.com/linuxdeepin/default-settings) 和 [deepin-desktop-schemas](https://github.com/linuxdeepin/deepin-desktop-schemas) 。旧有的两个仓库都负责管理 deepin 系统级配置，在功能性上有重合和冗余。参见[讨论](https://github.com/orgs/linuxdeepin/discussions/11769)。
+本软件包对系统进行一系列优化调整，旨在为 deepin 操作系统提供更好的体验。
+
+> 该仓库旨在替换旧有的 [deepin-default-settings](https://github.com/linuxdeepin/default-settings) 和 [deepin-desktop-schemas](https://github.com/linuxdeepin/deepin-desktop-schemas) 。旧有的两个仓库都负责管理 deepin 系统级配置，在功能性上有重合和冗余。参见[讨论](https://github.com/orgs/linuxdeepin/discussions/11769)。
 
 ## 帮助
 
