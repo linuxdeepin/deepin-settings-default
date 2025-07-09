@@ -34,9 +34,9 @@ Replaces:
  deepin-desktop-base,
  deepin-default-settings-network,
  deepinop,
-Description: default settings for deepin desktop environment
- This package does tweaking and to provide better experience of deepin desktop
- environment.
+Description: Default settings for deepin operating system
+ This package does tweaking to provide better experience for deepin operating
+ system.
 
 Package: deepin-settings-default-tuning
 Architecture: all
@@ -46,8 +46,8 @@ Conflicts:
  deepin-default-settings-tuning,
 Replaces:
  deepin-default-settings-tuning,
-Description: default settings for deepin desktop environment - misc overrides
- This package does tweaking and to provide better experience of deepin desktop
- environment.
+Description: Default settings for deepin operating system - misc overrides
+ This package does tweaking to provide better experience for deepin operating
+ system.
  .
  This package includes files to override cups default page and fcitx icon.

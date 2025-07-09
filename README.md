@@ -1,6 +1,8 @@
 # deepin-settings-default
 
-This repo is aimed to replace the old [deepin-default-settings](https://github.com/linuxdeepin/default-settings) and [deepin-desktop-schemas](https://github.com/linuxdeepin/deepin-desktop-schemas), since these two repos are all managing system-wide deepin settings, their functionality have overlapped. See [discussion](https://github.com/orgs/linuxdeepin/discussions/11769).
+This package does tweaking to provide better experience for deepin operating system.
+
+> This repo is aimed to replace the old [deepin-default-settings](https://github.com/linuxdeepin/default-settings) and [deepin-desktop-schemas](https://github.com/linuxdeepin/deepin-desktop-schemas), since these two repos are all managing system-wide deepin settings, their functionality have overlapped. See [discussion](https://github.com/orgs/linuxdeepin/discussions/11769).
 
 ## Getting help
 
